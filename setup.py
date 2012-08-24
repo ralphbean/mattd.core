@@ -19,12 +19,12 @@ def get_description():
     return ""
 
 requires = [
-    'daemon',
+    'python-daemon',
 ]
 
 setup(
     name='mattd.core',
-    version='0.0.1',
+    version='0.0.2',
     description="Voice-driven scriptable daemon.  Matt Daemon.",
     long_description = get_description(),
     install_requires=requires,
