@@ -27,13 +27,12 @@ class MattDaemon(object):
         """Initialize the speech components"""
         self.active_plugin = None
         self.plugins = []
-        for plugin_cls in pkg_resources.iter_entry_points("mattd.plugins"):
-            log.info("Loading plugin %r" % plugin_cls.name)
+        for epoint in pkg_resources.iter_entry_points("mattd.plugins"):
+            log.info("Loading plugin %r" % epoint.name)
             try:
-                plugin = plugin_cls(self)
-                self.plugins.append(plugin)
+                self.plugins.append(epoint.load()(self))
             except Exception as e:
-                log.warn("%r failed.  %r" % (plugin_cls.name, e))
+                log.warn("%r failed.  %r" % (epoint.name, e))
 
         log.info("Loaded %i plugins." % len(self.plugins))
 
