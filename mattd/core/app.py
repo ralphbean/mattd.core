@@ -7,6 +7,7 @@
 # the CMU Sphinx system.  See
 # http://cmusphinx.sourceforge.net/html/LICENSE for more information.
 
+import sys
 import pkg_resources
 
 import gtk
@@ -116,6 +117,11 @@ def _daemonize(func):
 
 
 def main(daemonize=True):
+
+    # TODO - rework this with argparse
+    if any(['--foreground' in arg for arg in sys.argv]):
+        daemonize=False
+
     def payload():
         app = MattDaemon()
         gtk.main()
