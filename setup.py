@@ -19,6 +19,7 @@ def get_description():
     return ""
 
 requires = [
+    'daemon',
 ]
 
 setup(
@@ -31,8 +32,13 @@ setup(
     author='Ralph Bean',
     author_email='rbean@redhat.com',
     license='AGPLv3+',
-    packages = ['mattd', 'mattd.core'],
-    namespace_packages = ['mattd'],
+    packages = ['mattd', 'mattd.core', 'mattd.plugins',],
+    namespace_packages = ['mattd', 'mattd.plugins',],
     include_package_data=True,
     zip_safe=False,
+    entry_points="""
+    [console_scripts]
+    mattd = mattd.core.app:main
+    """
+
 )
