@@ -75,10 +75,5 @@ def extract_logging_config(config):
                 'format': config.get('logging', 'format'),
             },
         },
-        root={
-            'level': config.get('logging', 'level'),
-            'handlers': ['file'],
-            'propagate': True,
-        },
     )
     return result
