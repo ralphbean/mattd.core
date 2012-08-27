@@ -18,6 +18,7 @@ def load_config():
             files += [
                 d + os.path.sep + fname
                 for fname in os.listdir(d)
+                if fname.endswith('.ini')
             ]
         except OSError, e:
             pass
