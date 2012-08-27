@@ -1,7 +1,7 @@
 %global modname mattd.core
 
 Name:           mattd
-Version:        0.0.1
+Version:        0.0.3
 Release:        1%{?dist}
 Summary:        Voice-to-text scripting engine.  Matt Daemon.
 Group:          Applications/Internet
@@ -70,5 +70,8 @@ fi
 %{_sysconfdir}/init.d/mattd
 
 %changelog
+* Mon Aug 27 2012 Ralph Bean <rbean@redhat.com> - 0.0.3-1
+- New, more stable upstream version.
+
 * Fri Aug 24 2012 Ralph Bean <rbean@redhat.com> - 0.0.1-1
 - Initial packaging.
