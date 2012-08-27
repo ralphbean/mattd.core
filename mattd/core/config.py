@@ -29,8 +29,56 @@ def load_config():
 
 
 def validate_config(config):
-    if not 'mattd.core' in config.sections():
-        log.error("No [mattd.core] section found in config.")
-        return False
+    required = {
+        'mattd.core': [],
+        'logging': ['location', 'level', 'format'],
+    }
+
+    for section, items in required.items():
+        if not section in config.sections():
+            log.error("No [%s] section found in config." % section)
+            return False
+
+        for item in items:
+            if not item in config.options(section):
+                log.error("[%s] has no %r" % (section, item))
+                return False
 
     return True
+
+
+def extract_logging_config(config):
+    """ Returns a dict to configure the logging module.
+
+    See http://bit.ly/U61957 for the schema.
+    """
+    result = dict(
+        version=1,
+        handlers={
+            'file': {
+                'class': "logging.handlers.RotatingFileHandler",
+                'formatter': 'awesome_formatter',
+                'filename': config.get('logging', 'location') + '/mattd.log',
+                'maxBytes': 10485760,
+                'backupCount': 2,
+            },
+        },
+        loggers={
+            'mattd': {
+                'level': config.get('logging', 'level'),
+                'handlers': ['file'],
+                'propagate': True,
+            },
+        },
+        formatters={
+            'awesome_formatter': {
+                'format': config.get('logging', 'format'),
+            },
+        },
+        root={
+            'level': config.get('logging', 'level'),
+            'handlers': ['file'],
+            'propagate': True,
+        },
+    )
+    return result

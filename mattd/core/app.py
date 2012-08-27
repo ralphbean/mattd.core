@@ -7,27 +7,38 @@
 # the CMU Sphinx system.  See
 # http://cmusphinx.sourceforge.net/html/LICENSE for more information.
 
+import os
 import sys
 import pkg_resources
 
-import gtk
-import pygst
-pygst.require('0.10')
-import gst
+# TODO -- remove
+import sh
+
+gtk, gst = None, None
 
 import mattd.core.config
 
 import logging
+import logging.config
 log = logging.getLogger("mattd")
 
-# TODO - remove this
-logging.basicConfig(level=logging.DEBUG)
-
+logging.basicConfig()
 
 class MattDaemon(object):
 
     def __init__(self, config):
         """Initialize the speech components"""
+        global gst
+        global gtk
+
+        import gtk
+        import pygst
+        pygst.require('0.10')
+        import gst
+
+        sys.stdout = None
+        sys.stderr = None
+
         self.config = config
         self.active_plugin = None
         self.plugins = []
@@ -111,8 +122,9 @@ def _daemonize(func):
         from daemon.pidlockfile import PIDLockFile
 
     pidlock = PIDLockFile('/var/run/mattd/mattd.pid')
-    output = file('/var/log/mattd/mattd.log', 'a')
-    daemon = DaemonContext(pidfile=pidlock, stdout=output, stderr=output)
+    stdout = file('/var/log/mattd/mattd-stdout.log', 'a')
+    stderr = file('/var/log/mattd/mattd-stderr.log', 'a')
+    daemon = DaemonContext(pidfile=pidlock, stdout=stdout, stderr=stderr)
     #daemon.terminate = _handle_signal
 
     with daemon:
@@ -125,9 +137,16 @@ def main(daemonize=True):
     if not mattd.core.config.validate_config(config):
         return 1
 
+    logging.config.dictConfig(
+        mattd.core.config.extract_logging_config(config)
+    )
+
     # TODO - rework this with argparse
     if any(['--foreground' in arg for arg in sys.argv]):
         daemonize=False
+
+    if any(['--daemonize' in arg for arg in sys.argv]):
+        daemonize=True
 
     def payload():
         app = MattDaemon(config)
