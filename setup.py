@@ -14,25 +14,33 @@ try:
 except:
     pass
 
+
 def get_description():
-    # TODO -- open README.rst
-    return ""
+    f = open("README.rst", 'r')
+    content = f.read()
+    f.close()
+    return content.split('.. split here')[-1]
 
 requires = [
+    'python-daemon',
 ]
 
 setup(
     name='mattd.core',
-    version='0.0.1',
+    version='0.0.3',
     description="Voice-driven scriptable daemon.  Matt Daemon.",
-    long_description = get_description(),
+    long_description=get_description(),
     install_requires=requires,
-    url = "http://mattd.rtfd.org/",
+    url="http://mattd.rtfd.org/",
     author='Ralph Bean',
     author_email='rbean@redhat.com',
     license='AGPLv3+',
-    packages = ['mattd', 'mattd.core'],
-    namespace_packages = ['mattd'],
+    packages=['mattd', 'mattd.core', 'mattd.plugins'],
+    namespace_packages=['mattd', 'mattd.plugins'],
     include_package_data=True,
     zip_safe=False,
+    entry_points="""
+    [console_scripts]
+    mattd = mattd.core.app:main
+    """
 )
