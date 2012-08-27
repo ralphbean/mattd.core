@@ -17,6 +17,7 @@ import sh
 gtk, gst = None, None
 
 import mattd.core.config
+import mattd.core.util
 
 import logging
 import logging.config
@@ -93,8 +94,10 @@ class MattDaemon(object):
         struct.set_value('uttid', uttid)
         asr.post_message(gst.message_new_application(asr, struct))
 
+    @mattd.core.util.catches_exceptions
     def application_message(self, bus, msg):
         """Receive application messages from the bus."""
+
         msgtype = msg.structure.get_name()
         content = msg.structure['hyp']
         if msgtype == 'partial_result':
