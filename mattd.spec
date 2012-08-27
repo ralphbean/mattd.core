@@ -1,7 +1,7 @@
 %global modname mattd.core
 
 Name:           mattd
-Version:        0.0.1
+Version:        0.0.4
 Release:        1%{?dist}
 Summary:        Voice-to-text scripting engine.  Matt Daemon.
 Group:          Applications/Internet
@@ -12,9 +12,12 @@ Source0:        http://pypi.python.org/packages/source/m/%{modname}/%{modname}-%
 BuildArch:      noarch
 
 BuildRequires:  python-devel
+BuildRequires:  python-setuptools
 BuildRequires:  python-daemon
 
+Requires:       python-daemon
 Requires:       pocketsphinx-plugin
+Requires:       gstreamer-python
 Requires:       pygtk2
 
 %description
@@ -70,5 +73,11 @@ fi
 %{_sysconfdir}/init.d/mattd
 
 %changelog
+* Mon Aug 27 2012 Ralph Bean <rbean@redhat.com> - 0.0.4-1
+- Forgotten items in the tarball and BuildRequires.
+
+* Mon Aug 27 2012 Ralph Bean <rbean@redhat.com> - 0.0.3-1
+- New, more stable upstream version.
+
 * Fri Aug 24 2012 Ralph Bean <rbean@redhat.com> - 0.0.1-1
 - Initial packaging.
