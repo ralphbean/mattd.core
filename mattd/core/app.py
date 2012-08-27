@@ -15,6 +15,8 @@ import pygst
 pygst.require('0.10')
 import gst
 
+import mattd.core.config
+
 import logging
 log = logging.getLogger("mattd")
 
@@ -24,8 +26,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 class MattDaemon(object):
 
-    def __init__(self):
+    def __init__(self, config):
         """Initialize the speech components"""
+        self.config = config
         self.active_plugin = None
         self.plugins = []
         for epoint in pkg_resources.iter_entry_points("mattd.plugins"):
@@ -118,18 +121,22 @@ def _daemonize(func):
 
 def main(daemonize=True):
 
+    config = mattd.core.config.load_config()
+    if not mattd.core.config.validate_config(config):
+        return 1
+
     # TODO - rework this with argparse
     if any(['--foreground' in arg for arg in sys.argv]):
         daemonize=False
 
     def payload():
-        app = MattDaemon()
-        gtk.main()
+        app = MattDaemon(config)
+        return gtk.main()
 
     if daemonize:
-        _daemonize(payload)
+        return _daemonize(payload)
     else:
-        payload()
+        return payload()
 
 if __name__ == '__main__':
-    main(False)
+    sys.exit(main(False))
