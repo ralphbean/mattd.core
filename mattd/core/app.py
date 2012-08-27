@@ -147,7 +147,7 @@ def main(daemonize=True):
         mattd.core.config.extract_logging_config(config)
     )
 
-    # TODO - rework this with argparse
+    # TODO - rework this with argparse someday
     if any(['--foreground' in arg for arg in sys.argv]):
         daemonize=False
 

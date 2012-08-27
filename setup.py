@@ -40,5 +40,4 @@ setup(
     [console_scripts]
     mattd = mattd.core.app:main
     """
-
 )

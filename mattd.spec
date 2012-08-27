@@ -32,7 +32,7 @@ your every whim!
     --install-data=%{_datadir} --root %{buildroot}
 
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/mattd.d/
-%{__cp} mattd.d/*.py %{buildroot}%{_sysconfdir}/mattd.d/.
+%{__cp} mattd.d/main.ini %{buildroot}%{_sysconfdir}/mattd.d/.
 
 %{__mkdir_p} %{buildroot}/%{_var}/run/%{modname}
 %{__mkdir_p} %{buildroot}/%{_var}/log/%{modname}
@@ -40,12 +40,12 @@ your every whim!
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/init.d
 %{__install} init.d/mattd.init %{buildroot}%{_sysconfdir}/init.d/mattd
 
+cp %{_bindir}/mattd %{_sbindir}/mattd
 
 %pre
 %{_sbindir}/groupadd -r mattd &>/dev/null || :
 %{_sbindir}/useradd  -r -s /sbin/nologin -d %{_datadir}/mattd -M \
-                     -c 'FedMsg' -g mattd mattd &>/dev/null || :
-
+                     -c 'Matt Daemon' -g mattd mattd &>/dev/null || :
 
 %post
 /sbin/chkconfig --add mattd
@@ -55,7 +55,6 @@ if [ $1 -eq 0 ]; then
     /sbin/service mattd stop >/dev/null 2>&1
     /sbin/chkconfig --del mattd
 fi
-
 
 %files
 %doc README.rst LICENSE
@@ -67,7 +66,7 @@ fi
 
 %config(noreplace) %{_sysconfdir}/mattd.d
 
-%{_bindir}/mattd
+%{_sbindir}/mattd
 %{_sysconfdir}/init.d/mattd
 
 %changelog
