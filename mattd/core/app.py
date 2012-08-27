@@ -111,6 +111,9 @@ class MattDaemon(object):
                         self.active_plugin = plugin
                         break
 
+            # XXX -> Danger.
+            # The active plugin is responsible for turning itself off when its
+            # done by setting self.app.active_plugin = None
             if self.active_plugin:
                 self.active_plugin.handle(content)
 
