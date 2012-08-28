@@ -27,7 +27,7 @@ requires = [
 
 setup(
     name='mattd.core',
-    version='0.0.4',
+    version='0.0.5',
     description="Voice-driven scriptable daemon.  Matt Daemon.",
     long_description=get_description(),
     install_requires=requires,

@@ -1,7 +1,7 @@
 %global modname mattd.core
 
 Name:           mattd
-Version:        0.0.4
+Version:        0.0.5
 Release:        1%{?dist}
 Summary:        Voice-to-text scripting engine.  Matt Daemon.
 Group:          Applications/Internet
@@ -34,8 +34,7 @@ your every whim!
 %{__python} setup.py install -O1 --skip-build \
     --install-data=%{_datadir} --root %{buildroot}
 
-%{__mkdir_p} %{buildroot}%{_sysconfdir}/mattd.d/
-%{__cp} mattd.d/main.ini %{buildroot}%{_sysconfdir}/mattd.d/.
+%{__mkdir_p} %{buildroot}/%{_datadir}/mattd
 
 %{__mkdir_p} %{buildroot}/%{_var}/run/%{modname}
 %{__mkdir_p} %{buildroot}/%{_var}/log/%{modname}
@@ -43,7 +42,11 @@ your every whim!
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/init.d
 %{__install} init.d/mattd.init %{buildroot}%{_sysconfdir}/init.d/mattd
 
-cp %{_bindir}/mattd %{_sbindir}/mattd
+%{__mkdir_p} %{buildroot}/%{_sbindir}
+mv %{buildroot}/%{_bindir}/mattd %{buildroot}/%{_sbindir}/mattd
+
+%{__mkdir_p} %{buildroot}%{_sysconfdir}/mattd.d/
+cp production.ini %{buildroot}%{_sysconfdir}/mattd.d/main.ini
 
 %pre
 %{_sbindir}/groupadd -r mattd &>/dev/null || :
@@ -64,15 +67,20 @@ fi
 %attr(755, %{modname}, %{modname}) %dir %{_var}/log/%{modname}
 %attr(755, %{modname}, %{modname}) %dir %{_var}/run/%{modname}
 
-%{python_sitelib}/%{modname}/
+%{python_sitelib}/mattd/
 %{python_sitelib}/%{modname}-%{version}-py*.egg-info/
+%{python_sitelib}/%{modname}-%{version}-py*.pth
 
 %config(noreplace) %{_sysconfdir}/mattd.d
+%{_datadir}/mattd
 
 %{_sbindir}/mattd
 %{_sysconfdir}/init.d/mattd
 
 %changelog
+* Mon Aug 27 2012 Ralph Bean <rbean@redhat.com> - 0.0.5-1
+- Include production.ini.
+
 * Mon Aug 27 2012 Ralph Bean <rbean@redhat.com> - 0.0.4-1
 - Forgotten items in the tarball and BuildRequires.
 
