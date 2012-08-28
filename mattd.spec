@@ -2,7 +2,7 @@
 
 Name:           mattd
 Version:        0.0.5
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Voice-to-text scripting engine.  Matt Daemon.
 Group:          Applications/Internet
 License:        AGPLv3+
@@ -36,8 +36,8 @@ your every whim!
 
 %{__mkdir_p} %{buildroot}/%{_datadir}/mattd
 
-%{__mkdir_p} %{buildroot}/%{_var}/run/%{modname}
-%{__mkdir_p} %{buildroot}/%{_var}/log/%{modname}
+%{__mkdir_p} %{buildroot}/%{_var}/run/mattd
+%{__mkdir_p} %{buildroot}/%{_var}/log/mattd
 
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/init.d
 %{__install} init.d/mattd.init %{buildroot}%{_sysconfdir}/init.d/mattd
@@ -49,9 +49,10 @@ mv %{buildroot}/%{_bindir}/mattd %{buildroot}/%{_sbindir}/mattd
 cp production.ini %{buildroot}%{_sysconfdir}/mattd.d/main.ini
 
 %pre
-%{_sbindir}/groupadd -r mattd &>/dev/null || :
+bash
+#%{_sbindir}/groupadd -r mattd || :
 %{_sbindir}/useradd  -r -s /sbin/nologin -d %{_datadir}/mattd -M \
-                     -c 'Matt Daemon' -g mattd mattd &>/dev/null || :
+                     -c 'Matt Daemon' mattd || :
 
 %post
 /sbin/chkconfig --add mattd
@@ -64,22 +65,22 @@ fi
 
 %files
 %doc README.rst LICENSE
-%attr(755, %{modname}, %{modname}) %dir %{_var}/log/%{modname}
-%attr(755, %{modname}, %{modname}) %dir %{_var}/run/%{modname}
+%attr(755, mattd, mattd) %dir %{_var}/log/mattd
+%attr(755, mattd, mattd) %dir %{_var}/run/mattd
+%attr(755, mattd, mattd) %dir %{_datadir}/mattd
+%config(noreplace) %{_sysconfdir}/mattd.d
+%{_sysconfdir}/init.d/mattd
+%{_sbindir}/mattd
 
 %{python_sitelib}/mattd/
 %{python_sitelib}/%{modname}-%{version}-py*.egg-info/
 %{python_sitelib}/%{modname}-%{version}-py*.pth
 
-%config(noreplace) %{_sysconfdir}/mattd.d
-%{_datadir}/mattd
-
-%{_sbindir}/mattd
-%{_sysconfdir}/init.d/mattd
 
 %changelog
-* Mon Aug 27 2012 Ralph Bean <rbean@redhat.com> - 0.0.5-1
+* Mon Aug 27 2012 Ralph Bean <rbean@redhat.com> - 0.0.5-4
 - Include production.ini.
+- Fixes to groupadd and useradd in %%pre
 
 * Mon Aug 27 2012 Ralph Bean <rbean@redhat.com> - 0.0.4-1
 - Forgotten items in the tarball and BuildRequires.

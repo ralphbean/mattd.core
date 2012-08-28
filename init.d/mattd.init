@@ -23,7 +23,7 @@
 PROG=mattd
 USER=mattd
 PIDFILE=/var/run/mattd/$PROG.pid
-OPTIONS=--daemon
+OPTIONS=--daemonize
 SUBSYS=/var/lock/subsys/$PROG
 
 start() {
