@@ -14,7 +14,7 @@ import pkg_resources
 # TODO -- remove
 import sh
 
-gtk, gst = None, None
+gobject, gst = None, None
 
 import mattd.core.config
 import mattd.core.util
@@ -30,9 +30,9 @@ class MattDaemon(object):
     def __init__(self, config):
         """Initialize the speech components"""
         global gst
-        global gtk
+        global gobject
 
-        import gtk
+        import gobject
         import pygst
         pygst.require('0.10')
         import gst
@@ -156,7 +156,8 @@ def main(daemonize=True):
 
     def payload():
         app = MattDaemon(config)
-        return gtk.main()
+        mainloop = gobject.MainLoop()
+        return mainloop.run()
 
     if daemonize:
         return _daemonize(payload)
